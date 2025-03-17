@@ -34,3 +34,22 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+      
+      - name: Compile CSS from SCSS files
+        uses: gha-utilities/sass-build@v0.6.0
+        with:
+          source: include/sidebar-items.scss
+          destination: sidebar-items.css
+
+      - name: Add and Commit changes to branch
+        run: |
+          git config --local user.email 'github-actions[bot]@users.noreply.github.com'
+          git config --local user.name 'github-actions[bot]'
+          git add sidebar-items.css
+          git commit -m 'Updates compiled CSS files'
+  
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
